@@ -133,7 +133,17 @@ export default function Navbar() {
                 className="group relative"
                 title={`Profile: ${userData.name || userData.email}`}
               >
-                <User className="h-6 w-6 text-white dark:text-[#c3aa88] group-hover:text-black dark:group-hover:text-[#91b5b5] transition-colors" />
+                {userData.image ? (
+                  <Image
+                    src={userData.image}
+                    alt={userData.name || "Profile"}
+                    width={28}
+                    height={28}
+                    className="h-7 w-7 rounded-full object-cover ring-2 ring-white/40 group-hover:ring-white transition-all"
+                  />
+                ) : (
+                  <User className="h-6 w-6 text-white dark:text-[#c3aa88] group-hover:text-black dark:group-hover:text-[#91b5b5] transition-colors" />
+                )}
                 <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   {userData.name || userData.email?.split('@')[0]}
                 </span>
@@ -187,7 +197,17 @@ export default function Navbar() {
               className="relative"
               title={`Profile: ${userData.name || userData.email}`}
             >
-              <User className="h-6 w-6" />
+              {userData.image ? (
+                <Image
+                  src={userData.image}
+                  alt={userData.name || "Profile"}
+                  width={26}
+                  height={26}
+                  className="h-[26px] w-[26px] rounded-full object-cover ring-2 ring-white/40"
+                />
+              ) : (
+                <User className="h-6 w-6" />
+              )}
             </Link>
           )}
 
@@ -218,8 +238,20 @@ export default function Navbar() {
             {isLoggedIn && userData && (
               <div className="mb-6 pb-4 border-b border-white/20">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
-                    <User className="h-5 w-5" />
+                  <div className="h-10 w-10 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-white/30">
+                    {userData.image ? (
+                      <Image
+                        src={userData.image}
+                        alt={userData.name || "Profile"}
+                        width={40}
+                        height={40}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-full w-full bg-white/20 flex items-center justify-center">
+                        <User className="h-5 w-5" />
+                      </div>
+                    )}
                   </div>
                   <div>
                     <p className="font-medium text-white">{userData.name || "User"}</p>

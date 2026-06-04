@@ -93,8 +93,9 @@ export const authOptions: NextAuthOptions = {
       
       if (user) {
         token.id = user.id;
-        token.email = user.email ?? undefined; // Convert null/undefined to undefined
-    token.name = user.name ?? undefined; // Convert null/undefined to undefined
+        token.email = user.email ?? undefined;
+        token.name = user.name ?? undefined;
+        token.image = user.image ?? undefined;
         
         console.log("🔄 Initial sign-in, fetching role from DB...");
         try {
@@ -109,6 +110,7 @@ export const authOptions: NextAuthOptions = {
             console.log("✅ Found user in DB, role:", dbUser.user_type);
             token.role = dbUser.user_type || "user";
             token.id = dbUser._id.toString();
+            token.image = dbUser.profile_picture || token.image || "";
           } else {
             console.log("❌ User not found in DB, defaulting to user");
             token.role = "user";
@@ -137,6 +139,8 @@ export const authOptions: NextAuthOptions = {
               token.role = dbRole;
               token.id = dbUser._id.toString();
             }
+            // Always sync latest profile picture
+            token.image = dbUser.profile_picture || token.image || "";
           }
         } catch (error) {
           console.error("❌ Error verifying role in JWT:", error);
@@ -145,6 +149,7 @@ export const authOptions: NextAuthOptions = {
       
       if (trigger === "update" && session?.user) {
         token.role = session.user.role || token.role;
+        if (session.user.image) token.image = session.user.image;
       }
       
       console.log("✅ Final JWT token role:", token.role);
@@ -159,6 +164,7 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role as string;
         session.user.email = token.email as string;
         session.user.name = token.name as string;
+        session.user.image = (token.image as string) || session.user.image || "";
         
         if (session.user.role === "user" && token.email) {
           try {
