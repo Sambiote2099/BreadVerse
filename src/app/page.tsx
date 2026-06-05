@@ -478,8 +478,12 @@ export default function Home() {
       type: "wheel,touch",
       tolerance: 10,
       preventDefault: true,
-      onDown: () => !hasPlayedRef.current && playIntroTransition(),
-      onUp: () => {},
+      onDown: (self) => {
+        if (self.event.type !== "touchmove" && !hasPlayedRef.current) playIntroTransition();
+      },
+      onUp: (self) => {
+        if (self.event.type === "touchmove" && !hasPlayedRef.current) playIntroTransition();
+      }
     });
 
     return () => {
